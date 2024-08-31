@@ -438,3 +438,26 @@ export const getUser = async (req: Request, res: Response) => {
   }
   };
 
+  export const getDataAdlFromId = async (req: Request, res: Response) => {
+    const usersId = req.params.id;  // Correctly access the parameter
+  
+    if (!usersId) {
+      return res.status(400).json({ error: 'Missing users_id parameter' });
+    }
+  
+    try {
+      const query = `
+        SELECT time_stamp, adl_point
+        FROM adl_form
+        WHERE users_id = $1
+        ORDER BY time_stamp DESC
+      `;
+      const result = await pool.query(query, [usersId]);  // Pass usersId as an array
+  
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+

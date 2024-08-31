@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ifnotLogin,ifnotRoleADMIN } from '../authen/authMiddleware';
-import { createMaster,updateStatusMaster,allMaster,getProfile,editProfile,profileMasterByid,editProfileMe,getCaregiven,getUser,getCaregivenFromuser,getuserDataFromID,historyDataRecordsFromID,getusersBySSD,getcaregivenBySSD,dataCaregiven,getCaregivenFromId } from '../controllers/usersController';
+import { createMaster,updateStatusMaster,allMaster,getProfile,editProfile,profileMasterByid,editProfileMe,getCaregiven,getUser,getCaregivenFromuser,getuserDataFromID,historyDataRecordsFromID,getusersBySSD,getcaregivenBySSD,dataCaregiven,getCaregivenFromId,getDataAdlFromId } from '../controllers/usersController';
 
 const router = Router();
 
@@ -20,6 +20,7 @@ router.get('/historyDataRecordsFromID/:id',ifnotRoleADMIN, historyDataRecordsFro
 router.get('/getusersBySSD/:id?',ifnotRoleADMIN, getusersBySSD);
 router.get('/getcaregivenBySSD/:id?',ifnotRoleADMIN, getcaregivenBySSD);
 router.get('/dataCaregiven/:id',ifnotRoleADMIN, dataCaregiven);
+router.get('/getDataAdlFromId/:id',ifnotRoleADMIN, getDataAdlFromId);
 
 
 
