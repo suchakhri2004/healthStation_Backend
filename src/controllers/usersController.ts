@@ -523,7 +523,7 @@ export const getuserDataFromID = async (req: RequestWithToken, res: Response) =>
     }
   };
 
-  export const editCaregiver = async (req: Request, res: Response) => {
+  export const editCaregiven = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     try {
