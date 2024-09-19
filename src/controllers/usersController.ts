@@ -100,6 +100,26 @@ export const getProfile = async (req: RequestWithToken, res: Response) => {
     }
 };
 
+export const getProfileMe = async (req: RequestWithToken, res: Response) => {
+    try {
+        const Master = await pool.query('SELECT id,username,firstname,lastname,phone,rolename FROM master WHERE id = $1',[req.token?.id])
+
+        if(Master.rows.length > 0){
+            return res.status(200).json
+            ({
+                Master:Master.rows
+            }) 
+        }
+        else{
+            res.status(404).send(`Profile not found`)
+        }
+        
+
+    } catch (error) {
+       return res.status(500).send(error)
+    }
+};
+
 export const editProfile = async (req: RequestWithToken, res: Response) => {
     try {
         const { username, firstname, lastname, phone } = req.body;
@@ -354,29 +374,71 @@ export const getUser = async (req: Request, res: Response) => {
     }
 };
 
-  export const getuserDataFromID = async (req: RequestWithToken, res: Response) => {
-  
+export const getuserDataFromID = async (req: RequestWithToken, res: Response) => {
     try {
         const PersonalData = await pool.query(
-            'SELECT id, ssd, firstname, lastname, sex, age,education_level,career,birthday_date,blood_group,num_of_house,group_of_house,tambon,amphoe,province,postcode, phone FROM users WHERE id = $1',[req.params.id]
+            'SELECT id, ssd, firstname, lastname, sex, age, education_level, career, birthday_date, blood_group, num_of_house, group_of_house, tambon, amphoe, province, postcode, phone FROM users WHERE id = $1',
+            [req.params.id]
         );
 
         const HelthData = await pool.query(
             `SELECT id, type_of_disability, cause_of_disability, financial_support, medical_treatment_rights,
-                    assistive_equipment, ability_to_carry_out_daily_activities, education_and_training, need_for_assistance
+                    assistive_equipment, ability_to_carry_out_daily_activities, education_and_training, need_for_assistance,
+                    congenital_disease, history_of_illness
              FROM healthdata_form
              WHERE users_id = $1
              ORDER BY time_stamp DESC
              LIMIT 1`,
             [req.params.id]
-          );
+        );
 
-        return res.status(200).json({PersonalData:PersonalData.rows,HelthData:HelthData.rows})
+        let surgeryhistoryData:any = [];
+        if (HelthData.rows.length > 0) {
+            const healthdataFormId = HelthData.rows[0].id;
+            const surgeryhistoryHistory = await pool.query(
+                `SELECT year, hospital 
+                 FROM surgery_history_table
+                 WHERE healthdata_form_id = $1`,
+                [healthdataFormId]
+            );
+            surgeryhistoryData = surgeryhistoryHistory.rows;
+        }
+
+        let drugAllergyData:any = [];
+        if (HelthData.rows.length > 0) {
+            const healthdataFormId = HelthData.rows[0].id;
+            const drugAllergyHistory = await pool.query(
+                `SELECT drug_name, drug_allergic_reactions 
+                 FROM drug_allergy_history_table
+                 WHERE healthdata_form_id = $1`,
+                [healthdataFormId]
+            );
+             drugAllergyData = drugAllergyHistory.rows;
+        }
+
+        let historyoffoodallergiesData:any = [];
+        if (HelthData.rows.length > 0) {
+            const healthdataFormId = HelthData.rows[0].id;
+            const historyoffoodallergiesHistory = await pool.query(
+                `SELECT food_name, food_allergic_reactions 
+                 FROM history_of_food_allergies_table
+                 WHERE healthdata_form_id = $1`,
+                [healthdataFormId]
+            );
+            historyoffoodallergiesData = historyoffoodallergiesHistory.rows;
+        }
+
+        return res.status(200).json({
+            PersonalData: PersonalData.rows,
+            HelthData: HelthData.rows,
+            SurgeryhistoryData: surgeryhistoryData,
+            DrugAllergyData: drugAllergyData,
+            HistoryoffoodallergiesData:historyoffoodallergiesData
+        });
     } catch (error) {
         return res.status(500).send(error);
     }
-  };
-
+};
 
 
   export const historyDataRecordsFromID = async (req: RequestWithToken, res: Response) => {
@@ -439,7 +501,7 @@ export const getUser = async (req: Request, res: Response) => {
   };
 
   export const getDataAdlFromId = async (req: Request, res: Response) => {
-    const usersId = req.params.id;  // Correctly access the parameter
+    const usersId = req.params.id;
   
     if (!usersId) {
       return res.status(400).json({ error: 'Missing users_id parameter' });
@@ -452,7 +514,7 @@ export const getUser = async (req: Request, res: Response) => {
         WHERE users_id = $1
         ORDER BY time_stamp DESC
       `;
-      const result = await pool.query(query, [usersId]);  // Pass usersId as an array
+      const result = await pool.query(query, [usersId]);
   
       res.json(result.rows);
     } catch (error) {
@@ -460,4 +522,92 @@ export const getUser = async (req: Request, res: Response) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+
+  export const editCaregiver = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const currentDataResult = await pool.query(
+            `SELECT ssd, firstname, lastname, sex, age, birthday_date, num_of_house, group_of_house, 
+                    alley_of_house, street_of_house, tambon, amphoe, province, postcode, phone, line_id, email, 
+                    education_level, career, caregiver, operating_area 
+             FROM caregiven 
+             WHERE id = $1`,
+            [id]
+        );
+
+        if (currentDataResult.rowCount === 0) {
+            return res.status(404).json({ message: 'Caregiver not found' });
+        }
+
+        const currentData = currentDataResult.rows[0];
+
+        const {
+            ssd = currentData.ssd,
+            firstname = currentData.firstname,
+            lastname = currentData.lastname,
+            sex = currentData.sex,
+            age = currentData.age,
+            birthday_date = currentData.birthday_date,
+            num_of_house = currentData.num_of_house,
+            group_of_house = currentData.group_of_house,
+            alley_of_house = currentData.alley_of_house,
+            street_of_house = currentData.street_of_house,
+            tambon = currentData.tambon,
+            amphoe = currentData.amphoe,
+            province = currentData.province,
+            postcode = currentData.postcode,
+            phone = currentData.phone,
+            line_id = currentData.line_id,
+            email = currentData.email,
+            education_level = currentData.education_level,
+            career = currentData.career,
+            caregiver = currentData.caregiver,
+            operating_area = currentData.operating_area
+        } = req.body;
+
+        const result = await pool.query(
+            `UPDATE caregiven 
+             SET 
+                ssd = $1,
+                firstname = $2,
+                lastname = $3,
+                sex = $4,
+                age = $5,
+                birthday_date = $6,
+                num_of_house = $7,
+                group_of_house = $8,
+                alley_of_house = $9,
+                street_of_house = $10,
+                tambon = $11,
+                amphoe = $12,
+                province = $13,
+                postcode = $14,
+                phone = $15,
+                line_id = $16,
+                email = $17,
+                education_level = $18,
+                career = $19,
+                caregiver = $20,
+                operating_area = $21
+             WHERE id = $22`,
+            [
+                ssd, firstname, lastname, sex, age, birthday_date, num_of_house, group_of_house, 
+                alley_of_house, street_of_house, tambon, amphoe, province, postcode, phone, line_id, email, 
+                education_level, career, caregiver, operating_area, id
+            ]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: 'Caregiver not found' });
+        }
+
+        return res.status(200).json({ message: 'Caregiver updated successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error updating caregiver', error });
+    }
+};
+
+
+
 

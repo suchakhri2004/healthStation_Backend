@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ifnotLogin,ifnotRoleADMIN } from '../authen/authMiddleware';
-import { createMaster,updateStatusMaster,allMaster,getProfile,editProfile,profileMasterByid,editProfileMe,getCaregiven,getUser,getCaregivenFromuser,getuserDataFromID,historyDataRecordsFromID,getusersBySSD,getcaregivenBySSD,dataCaregiven,getCaregivenFromId,getDataAdlFromId } from '../controllers/usersController';
+import { createMaster,updateStatusMaster,allMaster,getProfile,editProfile,profileMasterByid,editProfileMe,getCaregiven,getUser,getCaregivenFromuser,getuserDataFromID,historyDataRecordsFromID,getusersBySSD,getcaregivenBySSD,dataCaregiven,getCaregivenFromId,getDataAdlFromId,getProfileMe,editCaregiver } from '../controllers/usersController';
 
 const router = Router();
 
@@ -8,6 +8,7 @@ router.post('/createMaster',ifnotRoleADMIN, createMaster);
 router.put('/updateStatusMaster/:id',ifnotRoleADMIN, updateStatusMaster);
 router.get('/allMaster',ifnotRoleADMIN, allMaster);
 router.get('/getProfile/:id',ifnotRoleADMIN, getProfile);
+router.get('/getProfileMe',ifnotRoleADMIN, getProfileMe);
 router.put('/editProfile/:id',ifnotRoleADMIN, editProfile);
 router.get('/profileMasterByid/:id',ifnotLogin, profileMasterByid);
 router.get('/getCaregiven',ifnotRoleADMIN, getCaregiven);
@@ -21,6 +22,7 @@ router.get('/getusersBySSD/:id?',ifnotRoleADMIN, getusersBySSD);
 router.get('/getcaregivenBySSD/:id?',ifnotRoleADMIN, getcaregivenBySSD);
 router.get('/dataCaregiven/:id',ifnotRoleADMIN, dataCaregiven);
 router.get('/getDataAdlFromId/:id',ifnotRoleADMIN, getDataAdlFromId);
+router.put('/editCaregiver/:id',ifnotRoleADMIN, editCaregiver);
 
 
 

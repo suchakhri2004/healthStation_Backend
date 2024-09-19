@@ -14,7 +14,6 @@ export const dashboard = async (req: RequestWithToken, res: Response) => {
         const disability = (await pool.query(`SELECT id FROM users WHERE type = 'มีความพิการ'`)).rowCount
         const maleDisability = (await pool.query(`SELECT id FROM users WHERE sex = 'ชาย' AND type = 'มีความพิการ' `)).rowCount
         const femaleDisability = (await pool.query(`SELECT id FROM users WHERE sex = 'หญิง' AND type = 'มีความพิการ'  `)).rowCount
-
         const visuallyImpaired = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางการมองเห็น'`)).rowCount
         const PhysicallyDisabled = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางการเคลื่อนไหว'`)).rowCount
         const hearingAndCommunicationImpaired = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางการได้ยินและสื่อความหมาย'`)).rowCount
