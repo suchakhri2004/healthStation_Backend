@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import { pool } from '../db/client';
 import { RequestWithToken, ifnotLogin, ifnotRoleADMIN } from '../authen/authMiddleware'
 
-export const dashboard = async (req: RequestWithToken, res: Response) => {
-    try {
 
-        const overall = (await pool.query(`SELECT id FROM users`)).rowCount
+export const dashboardPerson  = async (req:RequestWithToken,res:Response) => {
+try {
+    const overall = (await pool.query(`SELECT id FROM users`)).rowCount
         const maleAll = (await pool.query(`SELECT id FROM users WHERE sex = 'ชาย' `)).rowCount
         const femaleAll = (await pool.query(`SELECT id FROM users WHERE sex = 'หญิง'`)).rowCount
         const normalHealth = (await pool.query(`SELECT id FROM users WHERE type = 'มีความพิการ'`)).rowCount
@@ -14,6 +14,27 @@ export const dashboard = async (req: RequestWithToken, res: Response) => {
         const disability = (await pool.query(`SELECT id FROM users WHERE type = 'มีความพิการ'`)).rowCount
         const maleDisability = (await pool.query(`SELECT id FROM users WHERE sex = 'ชาย' AND type = 'มีความพิการ' `)).rowCount
         const femaleDisability = (await pool.query(`SELECT id FROM users WHERE sex = 'หญิง' AND type = 'มีความพิการ'  `)).rowCount
+
+        res.status(200).json({
+            overall: overall,
+            maleAll: maleAll,
+            femaleAll: femaleAll,
+            normalHealth: normalHealth,
+            maleNormal: maleNormal,
+            femaleNormal: femaleNormal,
+            disability: disability,
+            maleDisability: maleDisability,
+            femaleDisability: femaleDisability,
+        })
+
+} catch (error) {
+        res.status(500).send(error)
+    
+}
+}
+
+export const dashboardTypes  = async (req:RequestWithToken,res:Response) => {
+    try {
         const visuallyImpaired = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางการมองเห็น'`)).rowCount
         const PhysicallyDisabled = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางการเคลื่อนไหว'`)).rowCount
         const hearingAndCommunicationImpaired = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางการได้ยินและสื่อความหมาย'`)).rowCount
@@ -23,6 +44,25 @@ export const dashboard = async (req: RequestWithToken, res: Response) => {
         const autisticDisability = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'ทางออทิสติค'`)).rowCount
         const moreThanOneTypeOfDisability = (await pool.query(` SELECT DISTINCT users_id, type_of_disability FROM healthdata_form WHERE type_of_disability = 'พิการมากกว่า 1 ประเภท'`)).rowCount
 
+        res.status(200).json({
+            visuallyImpaired: visuallyImpaired,
+            PhysicallyDisabled: PhysicallyDisabled,
+            hearingAndCommunicationImpaired: hearingAndCommunicationImpaired,
+            mentalAndBehavioralDisabilities: mentalAndBehavioralDisabilities,
+            intellectuallyDisabled: intellectuallyDisabled,
+            learningDisabilities: learningDisabilities,
+            autisticDisability: autisticDisability,
+            moreThanOneTypeOfDisability: moreThanOneTypeOfDisability,
+        })
+    
+    } catch (error) {
+            res.status(500).send(error)
+        
+    }
+ }
+
+ export const dashboardVillage = async (req: RequestWithToken, res: Response) => {
+    try {
         const village1 = (await pool.query(`SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 1 บ้านหลวง' AND type = 'มีความพิการ' `)).rowCount
         const village2 = (await pool.query(`SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 2 บ้านแพทย์' AND type = 'มีความพิการ' `)).rowCount
         const village3 = (await pool.query(`SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 2 บ้านปงสนุก' AND type = 'มีความพิการ' `)).rowCount
@@ -36,23 +76,6 @@ export const dashboard = async (req: RequestWithToken, res: Response) => {
         const village11 = (await pool.query(`SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 10 บ้านป่าซางคำ' AND type = 'มีความพิการ' `)).rowCount
 
         res.status(200).json({
-            overall: overall,
-            maleAll: maleAll,
-            femaleAll: femaleAll,
-            normalHealth: normalHealth,
-            maleNormal: maleNormal,
-            femaleNormal: femaleNormal,
-            disability: disability,
-            maleDisability: maleDisability,
-            femaleDisability: femaleDisability,
-            visuallyImpaired: visuallyImpaired,
-            PhysicallyDisabled: PhysicallyDisabled,
-            hearingAndCommunicationImpaired: hearingAndCommunicationImpaired,
-            mentalAndBehavioralDisabilities: mentalAndBehavioralDisabilities,
-            intellectuallyDisabled: intellectuallyDisabled,
-            learningDisabilities: learningDisabilities,
-            autisticDisability: autisticDisability,
-            moreThanOneTypeOfDisability: moreThanOneTypeOfDisability,
             village1: 'หมู่ที่ 1 บ้านหลวง',
             village1Count: village1,
             village2: 'หมู่ที่ 2 บ้านแพทย์',
@@ -82,6 +105,8 @@ export const dashboard = async (req: RequestWithToken, res: Response) => {
         res.status(500).send(error)
     }
 };
+    
+
 
 export const dashboardMap = async (req: RequestWithToken, res: Response) => {
     try {
@@ -132,9 +157,6 @@ export const dashboardMap = async (req: RequestWithToken, res: Response) => {
         res.status(500).send(error);
     }
 }
-
-
-
 
 
 export const insertedMap = async (req: RequestWithToken, res: Response) => {
