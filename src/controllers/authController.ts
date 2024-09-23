@@ -25,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
         if (passwordMatch) {
             if (process.env.SECRET) {
                 const token = jwt.sign({ username: user.username , firstname: user.firstname , lastname: user.lastname , id:user.id, rolename:user.rolename ,role:user.role , phone:user.phone , statusmaster:user.statusmaster  },process.env.SECRET,{expiresIn: "1h"})
-                return res.status(200).json({ token,rolename:user.rolename ,role:user.role, status:user.statusmaster, message: `Login Success` });
+                return res.status(200).json({ token,rolename:user.rolename ,role:user.role, status:user.statusmaster,id:user.id , message: `Login Success` });
             } else {
                 return res.status(500).send('Internal Server Error: Secret is undefined');
             }

@@ -25,7 +25,4 @@ router.get('/getDataAdlFromId/:id',ifnotRoleADMIN, getDataAdlFromId);
 router.put('/editCaregiven/:id',ifnotRoleADMIN, editCaregiven);
 
 
-
-
-
 export default router;
