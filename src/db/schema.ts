@@ -185,23 +185,23 @@ const map = `
 `;
 
 const createTables = async () => {
-    try {
-        await pool.query(createMasterTable);
-        await pool.query(createUserTable);
-        await pool.query(createHealthdataFormTable);
-        await pool.query(createHealthrecordsFormTable);
-        await pool.query(createADLFormTable);
-        await pool.query(createCaregivenTable);
-        await pool.query(createSurgeryhistoryTable);
-        await pool.query(createDrugallergyhistoryTable);
-        await pool.query(createHistoryoffoodallergiesTable);
-        await pool.query(createuserandcaregivenTable);
-        await pool.query(createvillageTable);
-        await pool.query(map);
-        console.log("Tables created successfully!");
-    } catch (error) {
-        console.error("Error creating tables", error);
-    }
+  try {
+    await pool.query(createMasterTable);
+    await pool.query(createUserTable);
+    await pool.query(createHealthdataFormTable);
+    await pool.query(createHealthrecordsFormTable);
+    await pool.query(createADLFormTable);
+    await pool.query(createCaregivenTable);
+    await pool.query(createSurgeryhistoryTable);
+    await pool.query(createDrugallergyhistoryTable);
+    await pool.query(createHistoryoffoodallergiesTable);
+    await pool.query(createuserandcaregivenTable);
+    await pool.query(createvillageTable);
+    await pool.query(map);
+    console.log("Tables created successfully!");
+  } catch (error) {
+    console.error("Error creating tables", error);
+  }
 };
 
 createTables();

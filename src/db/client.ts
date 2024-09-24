@@ -1,5 +1,5 @@
-import { Pool } from 'pg'
-import dotenv from 'dotenv';
+import { Pool } from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -9,12 +9,12 @@ const user = process.env.PG_USER;
 const password = process.env.PG_PASSWORD;
 const dbname = process.env.PG_DBNAME;
 
-const pool = new Pool ({
-    host: host,
-    port: Number(port),
-    user: user,
-    password: password,
-    database: dbname,
-})
+const pool = new Pool({
+  host: host,
+  port: Number(port),
+  user: user,
+  password: password,
+  database: dbname,
+});
 
-export { pool }
+export { pool };
