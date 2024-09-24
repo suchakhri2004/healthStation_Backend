@@ -124,7 +124,104 @@ export const dashboardTypes = async (req: RequestWithToken, res: Response) => {
   }
 };
 
-export const dashboardVillage = async (
+export const dashboardBarVillage = async (
+  req: RequestWithToken,
+  res: Response
+) => {
+  try {
+    const village1 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 1 บ้านหลวง' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village2 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 2 บ้านแพทย์' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village3 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 2 บ้านปงสนุก' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village4 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 3 บ้านปิน' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village5 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 4 บ้านไชยสถาน' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village6 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 5 บ้านท่าม่าน' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village7 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 6 บ้านแพทย์' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village8 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 7 บ้านปงสนุก' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village9 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 8 บ้านปิน' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village10 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 9 บ้านไชยสถาน' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+    const village11 = (
+      await pool.query(
+        `SELECT id FROM users WHERE group_of_house = 'หมู่ที่ 10 บ้านป่าซางคำ' AND type = 'มีความพิการ' `
+      )
+    ).rowCount;
+
+    res.status(200).json({
+      scaleType: "band",
+      data: [
+        "หมู่ที่ 1 บ้านหลวง",
+        "หมู่ที่ 2 บ้านแพทย์",
+        "หมู่ที่ 3 บ้านปงสนุก",
+        "หมู่ที่ 4 บ้านปิน",
+        "หมู่ที่ 5 บ้านไชยสถาน",
+        "หมู่ที่ 6 บ้านท่าม่าน",
+        "หมู่ที่ 7 บ้านหล่ายทุ่ง",
+        "หมู่ที่ 8 บ้านสบทราย",
+        "หมู่ที่ 9 บ้านใหม่",
+        "หมู่ที่ 10 บ้านกลาง",
+        "หมู่ที่ 11 บ้านป่าซางคำ",
+      ],
+      values: [
+        village1,
+        village2,
+        village3,
+        village4,
+        village5,
+        village6,
+        village7,
+        village8,
+        village9,
+        village10,
+        village11,
+      ],
+    });
+    
+    
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+export const dashboardCircleVillage = async (
   req: RequestWithToken,
   res: Response
 ) => {
@@ -187,32 +284,20 @@ export const dashboardVillage = async (
 
     res.status(200).json({
       villageAll: [
-        {
-          village1: "หมู่ที่ 1 บ้านหลวง",
-          village1Count: village1,
-          village2: "หมู่ที่ 2 บ้านแพทย์",
-          village2Count: village2,
-          village3: "หมู่ที่ 2 บ้านปงสนุก",
-          village3Count: village3,
-          village4: "หมู่ที่ 3 บ้านปิน",
-          village4Count: village4,
-          village5: "หมู่ที่ 4 บ้านไชยสถาน",
-          village5Count: village5,
-          village6: "หมู่ที่ 5 บ้านท่าม่าน",
-          village6Count: village6,
-          village7: "หมู่ที่ 6 บ้านหล่ายทุ่ง",
-          village7Count: village7,
-          village8: "หมู่ที่ 7 บ้านสบทราย",
-          village8Count: village8,
-          village9: "หมู่ที่ 8 บ้านใหม่",
-          village9Count: village9,
-          village10: "หมู่ที่ 9 บ้านกลาง",
-          village10Count: village10,
-          village11: "หมู่ที่ 10 บ้านป่าซางคำ",
-          village11Count: village11,
-        },
+        { id: 0, label: "หมู่ที่ 1 บ้านหลวง", value: village1 },
+        { id: 1, label: "หมู่ที่ 2 บ้านแพทย์", value: village2 },
+        { id: 2, label: "หมู่ที่ 3 บ้านปงสนุก", value: village3 },
+        { id: 3, label: "หมู่ที่ 4 บ้านปิน", value: village4 },
+        { id: 4, label: "หมู่ที่ 5 บ้านไชยสถาน", value: village5 },
+        { id: 5, label: "หมู่ที่ 6 บ้านท่าม่าน", value: village6 },
+        { id: 6, label: "หมู่ที่ 7 บ้านหล่ายทุ่ง", value: village7 },
+        { id: 7, label: "หมู่ที่ 8 บ้านสบทราย", value: village8 },
+        { id: 8, label: "หมู่ที่ 9 บ้านใหม่", value: village9 },
+        { id: 9, label: "หมู่ที่ 10 บ้านกลาง", value: village10 },
+        { id: 10, label: "หมู่ที่ 11 บ้านป่าซางคำ", value: village11 },
       ],
     });
+    
   } catch (error) {
     res.status(500).send(error);
   }
