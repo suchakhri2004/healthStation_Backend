@@ -111,7 +111,7 @@ export const allMaster = async (req: RequestWithToken, res: Response) => {
 export const getProfile = async (req: RequestWithToken, res: Response) => {
   try {
     const Master = await pool.query(
-      "SELECT id,username,firstname,lastname,phone,rolename FROM master WHERE id = $1",
+      "SELECT id,username,firstname,lastname,phone,rolename,statusmaster FROM master WHERE id = $1",
       [req.params.id]
     );
 
@@ -413,7 +413,7 @@ export const getuserDataFromID = async (
 ) => {
   try {
     const PersonalData = await pool.query(
-      "SELECT id, ssd, firstname, lastname, sex, age, education_level, career, birthday_date, blood_group, num_of_house, group_of_house, tambon, amphoe, province, postcode, phone FROM users WHERE id = $1",
+      "SELECT id, type, ssd, firstname, lastname, sex, age, education_level, career, birthday_date, blood_group, num_of_house, group_of_house, tambon, amphoe, province, postcode, phone FROM users WHERE id = $1",
       [req.params.id]
     );
 
